@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía Turno Laboral · Menú, Ejercicio, Sueño</title>
+    <!-- Font Awesome para iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+        }
+
+        body {
+            background: #f5f7fa;
+            color: #1e293b;
+            padding: 1.5rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* cabecera */
+        .header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .header h1 {
+            font-size: 1.9rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #0b3b5c, #1f6e8c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.5px;
+        }
+
+        .header i {
+            font-size: 2.2rem;
+            color: #1f6e8c;
+        }
+
+        .badge-turno {
+            background: #dbeafe;
+            padding: 0.3rem 1rem;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #1e4a6b;
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .download-pdf-btn {
+    background: #dc2626;
+    color: white;
+    border: none;
+    padding: 0.3rem 0.9rem;          /* ← Reducido: antes 0.6rem 1.5rem */
+    border-radius: 40px;
+    font-weight: 600;
+    font-size: 0.75rem;              /* ← Reducido: antes 0.95rem */
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;                        /* ← Reducido: antes 10px */
+    cursor: pointer;
+    transition: 0.2s ease;
+    box-shadow: 0 2px 6px rgba(220, 38, 38, 0.15); /* ← Sombra más suave */
+    text-decoration: none;
+    margin-left: 0.5rem;
+}
+
+.download-pdf-btn:hover {
+    background: #e2d412;
+    transform: scale(1.02);
+    box-shadow: 0 4px 10px rgba(220, 38, 38, 0.25);
+}
+
+        /* pestañas */
+        .tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            background: white;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+            margin-bottom: 2rem;
+            border: 1px solid #e9edf2;
+        }
+
+        .tab-btn {
+            background: transparent;
+            border: none;
+            padding: 0.7rem 1.5rem;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 1rem;
+            color: #475569;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tab-btn i {
+            font-size: 1.1rem;
+            color: #64748b;
+        }
+
+        .tab-btn:hover {
+            background: #f1f5f9;
+            color: #0f3b5a;
+        }
+
+        .tab-btn.active {
+            background: #1f6e8c;
+            color: white;
+            box-shadow: 0 4px 10px rgba(31, 110, 140, 0.25);
+        }
+
+        .tab-btn.active i {
+            color: white;
+        }
+
+        /* paneles */
+        .panel {
+            display: none;
+            animation: fade 0.3s ease;
+        }
+
+        .panel.active {
+            display: block;
+        }
+
+        @keyframes fade {
+            0% { opacity: 0.4; transform: translateY(8px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        /* tarjetas generales */
+        .card {
+            background: white;
+            border-radius: 28px;
+            padding: 1.8rem 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.04);
+            border: 1px solid #edf2f7;
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #0b3b5c;
+        }
+
+        .card-title i {
+            color: #1f6e8c;
+            font-size: 1.7rem;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.8rem;
+        }
+
+        .horario-badge {
+            background: #eef2f6;
+            padding: 0.3rem 1rem;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            display: inline-block;
+            margin-bottom: 0.5rem;
+            letter-spacing: 0.3px;
+            color: #1f4a66;
+        }
+
+        .menu-item {
+            border-left: 4px solid #b7d7e8;
+            padding-left: 1rem;
+            margin-bottom: 1.6rem;
+        }
+
+        .menu-item strong {
+            display: block;
+            font-size: 1rem;
+            margin-bottom: 0.3rem;
+            color: #1e4a6b;
+        }
+
+        .menu-item ul {
+            list-style: none;
+            padding-left: 0.5rem;
+        }
+
+        .menu-item li {
+            margin-bottom: 0.4rem;
+            font-size: 0.95rem;
+            display: flex;
+            gap: 8px;
+            align-items: baseline;
+        }
+
+        .menu-item li::before {
+            content: "•";
+            color: #1f6e8c;
+            font-weight: bold;
+            margin-right: 6px;
+        }
+
+        .tag {
+            background: #e6f0f5;
+            border-radius: 30px;
+            padding: 0.2rem 0.9rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #1a5777;
+            display: inline-block;
+        }
+
+        .shopping-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .shopping-category {
+            background: #f8fafc;
+            border-radius: 20px;
+            padding: 1.2rem 1.4rem;
+            border: 1px solid #e2e8f0;
+        }
+
+        .shopping-category h4 {
+            font-weight: 700;
+            color: #0f3b5a;
+            margin-bottom: 0.8rem;
+            border-bottom: 2px dashed #d4e2ed;
+            padding-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .shopping-category ul {
+            list-style: none;
+        }
+
+        .shopping-category li {
+            margin-bottom: 0.4rem;
+            font-size: 0.92rem;
+            display: flex;
+            align-items: baseline;
+            gap: 6px;
+        }
+
+        .shopping-category li::before {
+            content: "✓";
+            color: #1f6e8c;
+            font-weight: 700;
+            margin-right: 6px;
+        }
+
+        .exercise-block {
+            background: #f9fcff;
+            border-radius: 20px;
+            padding: 1.5rem;
+            border: 1px solid #deecf5;
+            margin-bottom: 1.5rem;
+        }
+
+        .exercise-block h4 {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #1a4b66;
+            margin-bottom: 0.8rem;
+        }
+
+        .sleep-protocol {
+            background: #f1f7fb;
+            border-radius: 20px;
+            padding: 1.6rem;
+        }
+
+        .sleep-protocol ul {
+            list-style: none;
+        }
+        .sleep-protocol li {
+            margin-bottom: 0.7rem;
+            display: flex;
+            gap: 10px;
+        }
+        .sleep-protocol li i {
+            color: #1f6e8c;
+            width: 1.6rem;
+            margin-top: 3px;
+        }
+
+        .med-tag {
+            background: #cbdde9;
+            padding: 0.2rem 1rem;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #0f3852;
+        }
+
+        @media (max-width: 760px) {
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+            .tabs {
+                border-radius: 30px;
+                justify-content: center;
+            }
+            .tab-btn {
+                padding: 0.5rem 1rem;
+                font-size: 0.9rem;
+            }
+            .card {
+                padding: 1.2rem;
+            }
+            .header h1 {
+                font-size: 1.5rem;
+            }
+            .badge-turno {
+                margin-left: 0;
+                width: 100%;
+                justify-content: center;
+                margin-top: 0.3rem;
+            }
+            .download-pdf-btn {
+    font-size: 0.65rem;      /* ← Reducido */
+    padding: 0.25rem 0.7rem; /* ← Reducido */
+    margin-left: 0;
+    margin-top: 0.4rem;
+}
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <!-- HEADER -->
+    <div class="header">
+        <i class="fas fa-clipboard-list"></i>
+        <h1>Guía de mejora saludable</h1>
+        <span class="badge-turno"><i class="fas fa-clock"></i> Matutino · Vespertino</span>
+
+          <!-- Botón descarga PDF: enlace directo al archivo (se asume que está en la misma carpeta) -->
+        <a href="Tabla de Menús y Ejercicio según el Turno Laboral.pdf" download class="download-pdf-btn" target="_blank">
+            <i class="fas fa-file-pdf"></i> Descargar PDF
+        </a>
+    </div>
+    
+    <!-- TABS -->
+    <div class="tabs" id="tabContainer">
+        <button class="tab-btn active" data-tab="menu"><i class="fas fa-utensils"></i> Menú</button>
+        <button class="tab-btn" data-tab="shopping"><i class="fas fa-shopping-cart"></i> Compras</button>
+        <button class="tab-btn" data-tab="exercise"><i class="fas fa-running"></i> Ejercicio</button>
+        <button class="tab-btn" data-tab="sleep"><i class="fas fa-moon"></i> Dormir</button>
+    <span class="tab-spacer"></span>
+        <!-- pequeño icono adicional de descarga en la barra (opcional) -->
+        <a href="Tabla de Menús y Ejercicio según el Turno Laboral.pdf" download style="color:#1f6e8c; font-size:0.9rem; margin-left:0.2rem;" title="Descargar PDF"><i class="fas fa-file-pdf"></i></a>
+    </div>
+
+    <!-- ========== PANEL MENÚ ========== -->
+    <div id="menu" class="panel active">
+        <div class="card">
+            <div class="card-title"><i class="fas fa-sun"></i> Turno matutino (6:00 – 14:30)</div>
+            <div class="grid-2">
+                <div>
+                    <div class="menu-item"><strong><i class="far fa-clock" style="margin-right: 6px;"></i> 05:00 – Desayuno</strong>
+                        <ul><li>Licuado de leche ligera + avena + crema de cacahuate pura (Erdnussmus) + ½  plátano.</li>
+                        <li>Licuado de leche almendras + avena + manzana + yogur griego bajo en grasa (0% o 2%).</li></ul>
+                    </div>
+                    <div class="menu-item"><strong><i class="far fa-clock"></i> 10:00 – Snack</strong>
+                        <ul><li>Una manzana y un puñado de nueces naturales (~30 g).</li></ul>
+                        <ul><li>Yogurt bajo en grasa con nueces.</li></ul>
+                         <ul><li>Bastones de zanahoria y pepino con limón (Ideal para el hígado).</li></ul>
+                    </div>
+                    <div class="menu-item"><strong><i class="far fa-clock"></i> 12:30 – Comida (en el trabajo)</strong>
+                        <ul><li>Pollo, carne o pescado (porcion pequeña) + verduras abundantes</li></ul>
+                    </div>
+                </div>
+                <div>
+                    <div class="menu-item"><strong><i class="far fa-clock"></i> 14:30 – Ejercicio (salida)</strong>
+                        <ul><li>Caminata a paso ligero 30 min</li></ul>
+                    </div>
+                    <div class="menu-item"><strong><i class="far fa-clock"></i> 16:30 – Cena</strong>
+                        <ul><li>Salmón/atún/pollo plancha + verduras libres + 1 tortilla proteína + 1 cuadrito chocolate 70-85%</li></ul>
+                    </div>
+                    <div class="menu-item"><strong><i class="far fa-clock"></i> 18:30 – Merienda ligera (opcional)</strong>
+                        <ul><li>Un puñado de nueces naturales (Walnusskerne).</li></ul>
+                           <ul><li>Fresas con nueces.</li></ul>
+                    </div>
+                    <div class="menu-item"><strong><i class="far fa-clock"></i> 20:00 – Cierre</strong>
+                        <ul><li>Infusión (manzanilla/menta) sin azúcar</li>
+                        <li>Si hambre: 5-7 almendras naturales ❌(evitar pan/fruta)</li></ul>
+                           <ul><li>Gelatina sin azucar.</li></ul>
+                    </div>
+                    <div class="menu-item"><strong><i class="fas fa-pills"></i> Antes de dormir</strong>
+                        <ul><li>Atorvastatina 40 mg con agua</li></ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title"><i class="fas fa-moon"></i> Turno vespertino (13:00 – 21:30)</div>
+            <div class="grid-2">
+                <div>
+                    <div class="menu-item"><strong><i class="far fa-clock"></i> 07:30 – Desayuno</strong>
+                        <ul><li>1 huevo revuelto con paprika + aceite oliva, 1 rebanada de pan integral (Vollkornbrot), ½ vaso licuado avena manzana</li></ul>
+                    </div>
+                    <div class="menu-item"><strong><i class="far fa-clock"></i> 09:30 – Ejercicio</strong>
+                        <ul><li>Caminata 30 minutos</li></ul>
+                        <ul><li>Opcional: 10 min de fuerza en casa (sentadillas o flexiones en pared).</li></ul>
+                    </div>
+                    <div class="menu-item"><strong><i class="far fa-clock"></i> 11:45 – Comida ligera</strong>
+                        <ul><li>Filete salmón/atún/pollo plancha + verduras + 1 cuadrito chocolate 70%</li></ul>
+                    </div>
+                    <div class="menu-item"><strong><i class="far fa-clock"></i> 15:00 – Almuerzo (en el trabajo)</strong>
+                        <ul><li>Ensalada lechuga + pasta con camarones/atún (sin aderezos cremosos)</li></ul>
+                        <ul><li>Pollo/carne teriyaki, quinoa, con mucha verdura y muy poca salsa.</li></ul>
+                    </div>
+                </div>
+                <div>
+                    <div class="menu-item"><strong><i class="far fa-clock"></i> 18:30 – Cena (en el trabajo)</strong>
+                        <ul><li>2 rebanadas pan integral + jamón pavo magro / hummus.❌Evitar por completo mermelada (fructosa concentrada)</li></ul>
+                    </div>
+                    <div class="menu-item"><strong><i class="far fa-clock"></i> 22:15 – Cierre</strong>
+                        <ul><li>Infusión (manzanilla/menta) sin azúcar</li>
+                        <li>Si hambre: 5-7 almendras naturales ❌(evitar pan/fruta)</li></ul>
+                           <ul><li>Gelatina sin azucar.</li></ul>
+                    </div>
+                    <div class="menu-item"><strong><i class="fas fa-pills"></i> Antes de dormir</strong>
+                        <ul><li>Atorvastatina 40 mg con agua</li></ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== PANEL COMPRAS ========== -->
+    <div id="shopping" class="panel">
+        <div class="card">
+            <div class="card-title"><i class="fas fa-store-alt"></i> Lista supermercado (Pfarrkirchen)</div>
+            <div class="shopping-grid">
+                <div class="shopping-category"><h4><i class="fas fa-apple-alt"></i> Pasillo 1 · Frutas y Verduras Frescas</h4>
+                    <ul><li>Brócoli, calabaza, espinacas, pepino, zanahoria, jitomate, paprika</li>
+                    <li>Avocado: los que tengan la etiqueta "essreif" o "genussreif" (listos para untar).</li>    
+                    <li>Manzanas (verdes/rojas), limones, ajo, cebolla</li>
+                    <li>Frutos rojos (arándanos, frambuesas, moras)</li></ul>
+                </div>
+                <div class="shopping-category"><h4><i class="fas fa-drumstick-bite"></i> Pasillo 2 · Carnes y Refrigerados</h4>
+                    <ul><li>Pechuga pollo (filetes o rebanadas magras)</li>
+                    <li>Yogurt griego 0% o 2%</li></ul>
+                </div>
+                <div class="shopping-category"><h4><i class="fas fa-snowflake"></i> Pasillo 3 · Congelados</h4>
+                    <ul><li>Filetes salmón, bacalao (Kabeljau) o carbonero (Seelachs)</li>
+                    <li>Frutos rojos congelados sin azúcar</li></ul>
+                </div>
+                <div class="shopping-category"><h4><i class="fas fa-seedling"></i> Pasillo 4 · Cereales/legumbres</h4>
+                    <ul><li>Avena (Zarte Haferflocken), quinoa, arroz integral</li>
+                    <li>Pan integral (Vollkornbrot, revisa que en los ingredientes diga Vollkornmehl y no contenga jarabes de azúcar)</li></ul>
+                </div>
+                <div class="shopping-category"><h4><i class="fas fa-oil-can"></i> Pasillo 5 · Aceites/bebidas</h4>
+                    <ul><li>Leche almendras/avena (sin azúcar), aceite oliva extra virgen, aceite colza (Rapsöl)</li>
+                    <li>Atún al natural, té verde, infusiones (manzanilla, menta, cardo mariano (Mariendistelkrauttee))</li></ul>
+                </div>
+                <div class="shopping-category"><h4><i class="fas fa-seedling"></i> Pasillo 6 · Frutos secos</h4>
+                    <ul><li>Nueces, nueces de la India, crema cacahuate 100% Erdnüsse</li>
+                    <li>Gelatina en polvo sin azúcar</li></ul>
+                </div>
+                <div class="shopping-category"><h4><i class="fas fa-candy-cane"></i> Pasillo 7 · Dulce saludable</h4>
+                    <ul><li>Chocolate amargo 85% cacao (Lindt o similar)</li></ul>
+                </div>
+                <div class="shopping-category" style="grid-column: span 1;"><h4><i class="fas fa-mortar-pestle"></i> Especias antiinflamatorias</h4>
+                    <ul><li>Cúrcuma + pimienta negra (activa absorción)</li>
+                    <li>Ajo en polvo, cebolla en polvo, levadura nutricional</li>
+                    <li>Pimentón ahumado, jengibre, comino</li>
+                    <li>Limones, vinagre de manzana, canela</li></ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== PANEL EJERCICIO ========== -->
+    <div id="exercise" class="panel">
+        <div class="card">
+            <div class="card-title"><i class="fas fa-heartbeat"></i> Plan semanal actividad física</div>
+            <div class="grid-2">
+                <div>
+                    <div class="exercise-block"><h4><i class="fas fa-bolt" style="color:#d97706;"></i> LUN · MIÉ · VIE · Intervalos</h4>
+                        <p><strong>Calentamiento:</strong> 5 min caminata normal.</p>
+                        <p><strong>Circuito (4 km):</strong> 1 km trote suave → 1 km caminata → 1 km trote → 1 km caminata cierre.</p>
+                        <p><strong>Estiramiento:</strong> 5 min piernas (pantorrillas, muslos).</p>
+                    </div>
+                    <div class="exercise-block"><h4><i class="fas fa-spa"></i> MAR · JUE · Espalda + recuperación</h4>
+                        <p><strong>Cardio:</strong> 20-30 min caminata constante (sin trote).</p>
+                        <p><strong>Rutina de espalda (3x10):</strong></p>
+                        <ul style="list-style: none; padding-left:0;">
+                            <li>• Supermán (brazo+pierna opuesta)</li>
+                            <li>• Bird-Dog (4 apoyos, estirar brazo y pierna opuesta)</li>
+                            <li>• Remo con banda elástica (3x12-15)</li>
+                        </ul>
+                    </div>
+                </div>
+                <div>
+                    <div class="exercise-block" style="background:#e6f0f5;"><h4><i class="fas fa-bed"></i> SÁB · DOM · Recuperación metabólica</h4>
+                        <p><strong>Descanso total</strong> (sin trote ni fuerza).</p>
+                        <p>Dormir 7-8 h continuas, mantener cortisol bajo.</p>
+                        <p><i class="fas fa-info-circle"></i> Si los turnos complican sueño: 1-2 mg melatonina 30 min antes (DM/Rossmann).</p>
+                    </div>
+                    <div style="background:#f0f7fe; border-radius:20px; padding:1.2rem; margin-top:0.8rem;">
+                        <i class="fas fa-tint" style="color:#1f6e8c;"></i> Hidratación previa al ejercicio. Sinergia con Atorvastatina.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== PANEL DORMIR ========== -->
+    <div id="sleep" class="panel">
+        <div class="card">
+            <div class="card-title"><i class="fas fa-moon"></i> Protocolo sueño reparador · Melatonina + Magnesio</div>
+            <div class="sleep-protocol">
+                <div style="display:flex; flex-wrap:wrap; gap:1.8rem; justify-content:space-between;">
+                    <div style="flex:1;">
+                        <h4 style="display:flex; gap:8px; color:#0f3b5a;"><i class="fas fa-brain"></i> Cómo funciona</h4>
+                        <ul><li><i class="fas fa-check-circle" style="color:#1f6e8c;"></i> <strong>Melatonina:</strong> indica al cerebro que es hora de dormir.</li>
+                            <li><i class="fas fa-check-circle" style="color:#1f6e8c;"></i> <strong>Magnesio (Magnesiumcitrat /Magnesiumbisglycinat):</strong> relaja sistema nervioso y músculos, evita despertares.</li>
+                        </ul>
+                    </div>
+                    <div style="flex:1;">
+                        <h4 style="display:flex; gap:8px; color:#0f3b5a;"><i class="fas fa-shopping-bag"></i> Compra (DM / Rossmann)</h4>
+                        <ul><li><i class="fas fa-spray-can"></i> Melatonina spray o cápsulas 1-2 mg/noche</li>
+                            <li><i class="fas fa-capsules"></i> Magnesio <strong>citrato o bisglicinato</strong> 200-300 mg (evitar óxido).</li>
+                        </ul>
+                    </div>
+                </div>
+                <hr style="margin: 1.2rem 0; border: 1px dashed #cbdde9;">
+                <div style="display:flex; flex-wrap:wrap; gap:1.8rem;">
+                    <div><h4><i class="far fa-clock"></i> Horario toma (30-45 min antes de acostarse)</h4>
+                        <ul><li>1. Magnesio con agua ( -45 min )</li>
+                        <li>2. Melatonina sublingual ( -30 min )</li>
+                        <li><span class="med-tag"><i class="fas fa-pills"></i> Atorvastatina 40 mg</span> compatible</li></ul>
+                    </div>
+                    <div><h4><i class="fas fa-lightbulb"></i> Reglas de oro</h4>
+                        <ul><li>Oscuridad absoluta (cortinas gruesas/antifaz)</li>
+                        <li>Habitación fresca (baja temperatura para sueño profundo)</li>
+                        <li>Beneficio arterial: magnesio relaja paredes, presión <120/80</li></ul>
+                    </div>
+                </div>
+                <div style="margin-top:1rem; background:#d9eaf3; border-radius:40px; padding:0.7rem 1.5rem; font-size:0.9rem;">
+                    <i class="fas fa-shield-alt"></i> Sin interacciones negativas con Atorvastatina.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Tabs logic
+    document.addEventListener('DOMContentLoaded', function() {
+        const tabs = document.querySelectorAll('.tab-btn');
+        const panels = {
+            menu: document.getElementById('menu'),
+            shopping: document.getElementById('shopping'),
+            exercise: document.getElementById('exercise'),
+            sleep: document.getElementById('sleep')
+        };
+
+        tabs.forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                // remove active from all tabs
+                tabs.forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+
+                // hide all panels
+                Object.values(panels).forEach(p => p.classList.remove('active'));
+
+                // show target
+                const target = this.dataset.tab;
+                if (panels[target]) panels[target].classList.add('active');
+            });
+        });
+    });
+</script>
+
+</body>
+</html>
